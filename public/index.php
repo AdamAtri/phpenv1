@@ -2,19 +2,23 @@
 
 require_once '../vendor/autoload.php';
 
-echo "Hello Motherfunction!";
+    echo "Hello Motherfunction!";
 
-$database = new medoo([
-    'database_type' => 'sqlite',
-    'database_file' => '../storage/database.db'
-]);
+    $file = '../storage/database.db';
+    if (is_writable('../storage/database.local.db')) {
+        $file = '../storage/database.local.db';
+    }
 
-$comment = new AdamApp\Comment($database);
-$comment->setEmail('adam@atri.rocks')
-    ->setName('Adam Atri')
-    ->setComment('Saving comments works!')
+    $database = new medoo([
+        'database_type' => 'sqlite',
+        'database_file' => $file
+    ]);
+
+    $comment = new AdamApp\Comment($database);
+    $comment->setEmail('adam@atri.rocks')
+        ->setName('Adam Atri')
+        ->setComment('Saving comments works!')
     ->save();
-// dump($database);
 
 ?>
 
