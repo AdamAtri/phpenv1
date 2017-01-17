@@ -16,7 +16,9 @@ class Comment {
 
   public function findAll() {
     $collection = [ ];
-    $comments = $this->database->select('comments', null, '*',
+    $comments = $this->database->select('comments', [
+                                          "name", "email", "comment", "submissionDate"
+                                        ],
                                         ["ORDER" => "comments.submissionDate DESC"]);
     if ($comments) {
       foreach ($comments as $array) {
