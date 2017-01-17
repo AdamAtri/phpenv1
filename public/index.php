@@ -1,6 +1,8 @@
 <?php
-
-require_once '../vendor/autoload.php';
+    
+    use Particle\Validator\Validator;
+    
+    require_once '../vendor/autoload.php';
 
     echo "Hello Motherfunction!";
 
@@ -15,11 +17,21 @@ require_once '../vendor/autoload.php';
     ]);
 
     $comment = new AdamApp\Comment($database);
-    $comment->setEmail('adam@atri.rocks')
-        ->setName('Adam Atri')
-        ->setComment('Saving comments works!')
-    ->save();
 
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $v = new Validator();
+        $v->required('name')->lengthBetween(1, 100)->alnum(TRUE);
+        $v->required('email')->email()->lengthBetween(5, 255);
+        $v->required('comment')->lengthBetween(10, NULL);
+
+        $result = $v->validate($_POST);
+        if ($result->isValid()) {
+            echo "Good shit!";
+        }
+        else {
+            dump($result->getMessages());
+        }
+    }
 ?>
 
 <!doctype html>
@@ -33,25 +45,42 @@ require_once '../vendor/autoload.php';
 
         <link rel="apple-touch-icon" href="apple-touch-icon.png">
         <!-- Place favicon.ico in the root directory -->
-
+        <!-- Latest compiled and minified bootstrap CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <!-- jQuery library -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+        <!-- Latest compiled Bootstrap JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
         <link rel="stylesheet" href="css/normalize.css">
         <link rel="stylesheet" href="css/main.css">
         <script src="js/vendor/modernizr-2.8.3.min.js"></script>
+
     </head>
     <body>
+    <div class="container">
         <!--[if lt IE 8]>
             <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
 
         <!-- Add your site or application content here -->
         <form method="post">
-            <label for="name">Name: <input type="text" name="name" placeholder="Your name"></label><br>
-            <label for="email">Email: <input type="email" name="email" placeholder="Your email"></label><br>
-            <label for="comment">Comment: <br><textarea name="comment" cols="30" rows="10"></textarea></label><br>
+            <div class="form-group">
+                <label for="name">Name: </label>
+                <input class="form-control" type="text" name="name" placeholder="Your name">
+            </div>
+            <div class="form-group">
+                <label for="email">Email: </label>
+                <input class="form-control" type="email" name="email" placeholder="Your email">
+            </div>
+            <div class="form-group">
+                <label for="comment">Comment: </label>
+                <textarea class="form-control" name="comment" cols="30" rows="10"></textarea>
+            </div>
             <br>
-            <input type="submit" value="Save">
+            <input class="btn btn-primary" type="submit" value="Save">
         </form>
 
+        <!-- Boilerplate Scripts -->
         <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
         <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.12.0.min.js"><\/script>')</script>
         <script src="js/plugins.js"></script>
@@ -66,5 +95,6 @@ require_once '../vendor/autoload.php';
             r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
             ga('create','UA-XXXXX-X','auto');ga('send','pageview');
         </script>
+    </div>
     </body>
 </html>
