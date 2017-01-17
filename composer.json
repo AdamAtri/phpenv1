@@ -9,6 +9,11 @@
             "email": "k.adam.atri@gmail.com"
         }
     ],
+    "autoload": {
+        "psr-4": {
+            "AdamApp\\": "src"
+        }
+    },
     "require": {
         "catfan/medoo": "^1.1"
     },

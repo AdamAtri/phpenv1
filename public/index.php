@@ -9,6 +9,11 @@ $database = new medoo([
     'database_file' => '../storage/database.db'
 ]);
 
+$comment = new AdamApp\Comment($database);
+$comment->setEmail('adam@atri.rocks')
+    ->setName('Adam Atri')
+    ->setComment('Saving comments works!')
+    ->save();
 // dump($database);
 
 ?>
