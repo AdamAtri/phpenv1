@@ -26,7 +26,19 @@
 
         $result = $v->validate($_POST);
         if ($result->isValid()) {
-            echo "Good shit!";
+            try {
+                $comment
+                  ->setName($_POST['name'])
+                  ->setEmail($_POST['email'])
+                  ->setComment($_POST['comment'])
+                  ->save();
+                header('Location: /');
+                return;
+            }
+            catch (\Exception $e) {
+                die($e->getMessage());
+            }
+
         }
         else {
             dump($result->getMessages());
@@ -63,6 +75,15 @@
         <![endif]-->
 
         <!-- Add your site or application content here -->
+
+        <!-- List comments here-->
+        <?php foreach ($comment->findAll() as $c) : ?>
+          <div class="panel panel-primary">
+              <div class="panel-heading"><h4>On <?= $c->getSubmissionDate() ?>, <strong><?= $c->getName() ?></strong> wrote: </h4></div>
+              <div class="panel-body"><?= $c->getComment(); ?></div>
+          </div>
+        <?php endforeach; ?>
+        <!-- put comment form here -->
         <form method="post">
             <div class="form-group">
                 <label for="name">Name: </label>
